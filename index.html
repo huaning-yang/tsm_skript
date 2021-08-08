@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script>
+            function JSONLD(context){
+                if (context == 'editor'){
+                    data = {
+                        "@context": {
+                            "verona": "https://w3id.org/iqb/verona-modules#",
+                            "editor": "verona:editor",
+                            "player": "verona:player",
+                            "name": { "@id": "verona:name", "@container": "@language"},
+                            "description": { "@id": "verona:description", "@container": "@language"},
+                            "version": "verona:version",
+                            "apiVersion": "verona:apiVersion",
+                            "repository": "verona:repository",
+                            "repoType": "verona:repoType",
+                            "url": "verona:url",
+                            "maintainer": "verona:maintainer",
+                            "Email": "verona:email",
+                            "notSupportedFeature": "verona:notSupportedFeatures"
+                        },
+                        "@id": "iqb-verona-plaintext-editor",
+                        "type": "editor"
+                    }
+                    return data;
+                } else if(context == "player"){
+                    data = {
+                        "@context": {
+                            "verona": "https://w3id.org/iqb/verona-modules#",
+                            "editor": "verona:editor",
+                            "player": "verona:player",
+                            "name": { "@id": "verona:name", "@container": "@language"},
+                            "description": { "@id": "verona:description", "@container": "@language"},
+                            "version": "verona:version",
+                            "apiVersion": "verona:apiVersion",
+                            "repository": "verona:repository",
+                            "repoType": "verona:repoType",
+                            "url": "verona:url",
+                            "maintainer": "verona:maintainer",
+                            "Email": "verona:email",
+                            "notSupportedFeature": "verona:notSupportedFeatures"
+                        },
+                        "@id": "iqb-verona-player",
+                        "type": "player"
+                    }
+                    return data;
+                } 
+            }
+        </script>
+
+        <script>
+            function addFields(id, container, type){
+                var number = document.getElementById(id).value;
+                var container = document.getElementById(container);
+                while(container.hasChildNodes()) {
+                    container.removeChild(container.lastChild);
+                }
+                var languages = ["de", "en", "fr", "es", "zh", "tr", "kr", "ru", "pl", "jp"];
+                var languages_text = ["German", "English","French", "Spanish", "Chinese", "Korean", "Turkish", "Russian", "Polish", "Japanese"];
+                for(i=0;i < number; i++){
+                    container.appendChild(document.createTextNode(type + (i+1)));
+                    if(type == 'Name'){
+                        var input = document.createElement("input");
+                        input.type = "text";
+                        input.name = "Language" + i;
+                    } else if(type == 'Description') {
+                        var input = document.createElement('textarea');
+                        input.rows = '5';
+                        input.cols = '60';
+                        
+                    } 
+                    var form = document.createElement('form');
+                    form.id = type + i;
+                    form.name = type + i;
+                    var select = document.createElement('select');
+                    select.name = "language" + i;
+                    select.id = "language" + i;
+                    for(j=0; j < languages.length; j++){
+                        var option = document.createElement('option');
+                        option.value = languages[j];
+                        option.text = languages_text[j];
+                        select.appendChild(option);
+                    }
+                    
+                    form.appendChild(select);
+                    form.appendChild(input);
+
+                    container.appendChild(form);
+                    
+                }
+            }
+        </script>
+
+        <script>
+            function addFieldsMaintainer(id, container, type){
+                var number = document.getElementById(id).value;
+                var container = document.getElementById(container);
+                while(container.hasChildNodes()) {
+                    container.removeChild(container.lastChild);
+                }
+                var languages = ["de", "en", "fr", "es", "zh", "tr", "kr", "ru", "pl", "jp"];
+                var languages_text = ["German", "English","French", "Spanish", "Chinese", "Korean", "Turkish", "Russian", "Polish", "Japanese"];
+                for(i = 0; i < number; i++) {
+                    container.appendChild(document.createTextNode(type + (i+1)));
+                    var name = document.createElement('form');
+                    var email = document.createElement('input');
+                    var url = document.createElement('input');
+                    var input = document.createElement('input');
+                    input.type = 'text';
+                    input.id = 'maintainer_name' + i;
+                    input.placeholder = 'Name of maintainer'
+                    email.type = 'text';
+                    email.id = "maintainer_email" + i;
+                    url.type = 'text';
+                    url.id = "maintainer_url" + i;
+                    email.placeholder = 'Email of maintainer';
+                    url.placeholder = 'Website of maintainer';
+                    var form = document.createElement('form');
+                    form.id = type + i;
+                    form.name = type + i;
+                    var select = document.createElement('select');
+                    select.name = "language" + i;
+                    select.id = "language" + i;
+                    for(j=0; j < languages.length; j++){
+                        var option = document.createElement('option');
+                        option.value = languages[j];
+                        option.text = languages_text[j];
+                        select.appendChild(option);
+                    }
+
+                    name.appendChild(select);
+                    name.appendChild(input);
+                    form.appendChild(name);
+                    form.appendChild(email);
+                    form.appendChild(url);
+                    container.appendChild(form)
+                }
+            }
+        </script>
+    </head>
+
+    <body>
+        <h1>Generate JSONLD</h1>
+        <script>
+            function setElements(){
+                context = document.getElementById("context").value;
+                data = JSONLD(context);
+                document.getElementById("codeID").innerHTML = JSON.stringify(data,undefined, 2);
+                console.log(JSON.stringify(data,undefined, 2));
+            }
+        </script>
+        <form>
+            <h4>Type</h4>
+            <input type="text" id="context" placeholder="Type of this module (either editor or player)">
+            <input type="button" onclick="setNotSupportedFeatures()" value="Generate context">
+        </form>
+        <h4>name</h4>
+        <input type="text" id="name_field" name="name_field" value="" placeholder="#names"> Max 10 Languages<br />
+        <button id="fillDetails" onclick="addFields(document.getElementById('name_field').id, document.getElementById('name').id, 'Name')">Generate name fields</button>
+        <div id="name">
+        </div>
+
+        <h4>Description</h4>
+        <input type="text" id="description_field" name="description_field" value="" placeholder="#description"> Max 10 Descriptions<br />
+        <button id="fillDetails" onclick="addFields(document.getElementById('description_field').id, document.getElementById('description').id, 'Description')">Generate description fields</button>
+        <div id="description">
+        </div>
+        
+        <h4>Maintainer</h4>
+        <input type="text" id="maintainer_field" name="maintainer_field" value="" placeholder="#maintainers"> Max 10 Maintainers<br />
+        <button id="fillDetails" onclick="addFieldsMaintainer(document.getElementById('maintainer_field').id, document.getElementById('maintainer').id, 'Maintainer')">Generate Maintainer fields</button>
+        <div id="maintainer"></div>
+
+        <div id="version">
+            <h4>Version</h4>
+            <input type="text" id="version" placeholder="version number">
+        </div>
+        
+        <div id="apiVersion">
+            <h4>API Version</h4>
+            <input type="text" id="apiVersion" placeholder="api Version">
+        </div>
+        
+        <div id="repository">
+            <h4>Repository</h4>
+            <form id="repoForm">
+                <select>
+                    <option value="git">Git</option>
+                    <option value="svn">SVN</option>
+                    <option value="mercurial">Mercurial</option>
+                </select>
+                <input id="repoURL" placeholder="URL of the repository">
+            </form>
+            
+        </div>
+
+        <script>
+            function setNotSupportedFeatures(){
+                var container = document.getElementById('notSupportedFeatures');
+                if(document.getElementById('notSupporedFeatureForm')){
+                    container.removeChild(container.lastElementChild);
+                }
+                var type = document.getElementById('context').value;
+                var form = document.createElement('form');
+                form.id = "notSupporedFeatureForm";
+                var select = document.createElement('select');
+                select.multiple = true;
+                
+
+                if(type == 'player'){
+                    var notSupportedFeatures = ["stop-continue","focus-notify", "report-on-demand","log-policy","paging-mode","navigation-denied"]
+                    for(i = 0; i< notSupportedFeatures.length;i++){
+                        var option = document.createElement('option');
+                        option.value = notSupportedFeatures[i];
+                        option.text = notSupportedFeatures[i];
+                        select.appendChild(option);
+                    }
+                } else if(type == 'editor') {
+                    var option = document.createElement('option');
+                    option.value = 'report-eager';
+                    option.text = 'report-eager';
+                    select.appendChild(option);
+                }
+                form.appendChild(select);
+                container.appendChild(form);
+
+            }
+        </script>
+
+        <div id="notSupportedFeatures">
+            <h4>Not Supported Features</h4>
+            <p>You must enter a type before you see the not supported features.</p>
+            <p>Hold down Ctrl/Strg or Command button to select multiple options.</p>
+        </div>
+        <script>
+            function printValues() {
+                
+            }
+        </script>
+
+        <input type="submit" onclick="printValues()">
+    </body> 
+</html>
