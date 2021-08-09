@@ -65,10 +65,12 @@
                     container.appendChild(document.createTextNode(type + (i+1)));
                     if(type == 'Name'){
                         var input = document.createElement("input");
+						input.id = 'Name_field' + i;
                         input.type = "text";
                         input.name = "Language" + i;
                     } else if(type == 'Description') {
                         var input = document.createElement('textarea');
+						input.id = 'Description_field' + i;
                         input.rows = '5';
                         input.cols = '60';
                         
@@ -77,10 +79,15 @@
                     form.id = type + i;
                     form.name = type + i;
                     var select = document.createElement('select');
-                    select.name = "language" + i;
-                    select.id = "language" + i;
+					if(type == 'Name'){
+						select.id = 'languageName' + i;
+					} else if (type == 'Description') {
+						select.id = "languageDescription" + i;
+					}
+                    
                     for(j=0; j < languages.length; j++){
                         var option = document.createElement('option');
+						option.id = 'language_option' + j;
                         option.value = languages[j];
                         option.text = languages_text[j];
                         select.appendChild(option);
@@ -123,8 +130,7 @@
                     form.id = type + i;
                     form.name = type + i;
                     var select = document.createElement('select');
-                    select.name = "language" + i;
-                    select.id = "language" + i;
+                    select.id = "languageMaintainer" + i;
                     for(j=0; j < languages.length; j++){
                         var option = document.createElement('option');
                         option.value = languages[j];
@@ -175,20 +181,20 @@
         <button id="fillDetails" onclick="addFieldsMaintainer(document.getElementById('maintainer_field').id, document.getElementById('maintainer').id, 'Maintainer')">Generate Maintainer fields</button>
         <div id="maintainer"></div>
 
-        <div id="version">
+        <div name="version">
             <h4>Version</h4>
             <input type="text" id="version" placeholder="version number">
         </div>
         
-        <div id="apiVersion">
+        <div name="apiVersion">
             <h4>API Version</h4>
             <input type="text" id="apiVersion" placeholder="api Version">
         </div>
         
-        <div id="repository">
+        <div name="repository">
             <h4>Repository</h4>
             <form id="repoForm">
-                <select>
+                <select id="repoSelect">
                     <option value="git">Git</option>
                     <option value="svn">SVN</option>
                     <option value="mercurial">Mercurial</option>
@@ -206,8 +212,9 @@
                 }
                 var type = document.getElementById('context').value;
                 var form = document.createElement('form');
-                form.id = "notSupporedFeatureForm";
+                form.id = 'notSupporedFeatureForm';
                 var select = document.createElement('select');
+				select.id = 'notSupportedFeaturesSelect';
                 select.multiple = true;
                 
 
@@ -215,19 +222,20 @@
                     var notSupportedFeatures = ["stop-continue","focus-notify", "report-on-demand","log-policy","paging-mode","navigation-denied"]
                     for(i = 0; i< notSupportedFeatures.length;i++){
                         var option = document.createElement('option');
+						option.id = 'notSupporedFeaturePlayer' + i;
                         option.value = notSupportedFeatures[i];
                         option.text = notSupportedFeatures[i];
                         select.appendChild(option);
                     }
                 } else if(type == 'editor') {
                     var option = document.createElement('option');
+					option.id = 'notSupporedFeatureEditor'
                     option.value = 'report-eager';
                     option.text = 'report-eager';
                     select.appendChild(option);
                 }
                 form.appendChild(select);
                 container.appendChild(form);
-
             }
         </script>
 
@@ -237,10 +245,58 @@
             <p>Hold down Ctrl/Strg or Command button to select multiple options.</p>
         </div>
         <script>
-            function printValues() {
-                
+            function printValues(){
+                var version = document.getElementById('version');
+				var apiVersion = document.getElementById('apiVersion');
+				var repositoryType = document.getElementById('repoSelect');
+				var type = document.getElementById('context');
+				var notSupporedFeatures = document.getElementById('notSupportedFeaturesSelect').selectedOptions;
+				var values = Array.from(notSupporedFeatures).map(({value}) => value);
+				var numberNames = document.getElementById('name_field').value;
+				var numberDescriptions = document.getElementById('description_field').value;
+				var numberMaintainers = document.getElementById('maintainer_field').value;
+				var repositoryURL = document.getElementById('repoURL');
+				for(i= 0; i < numberNames; i++) {
+					var name_field = 'Name_field' + i;
+					var language_field = 'languageName' + i;
+					var name = document.getElementById(name_field);
+					var language = document.getElementById(language_field);
+					console.log(name.value);
+					console.log(language.value);
+				}
+				var myObj = {};
+				for(j= 0; j < numberDescriptions; j++) {
+					var description_field = 'Description_field' + j;
+					var language_field = 'languageDescription' + j;
+					console.log
+					var description = document.getElementById(description_field);
+					var language = document.getElementById(language_field);
+					myObj[description_field] = {};
+					myObj[description_field][document.getElementById(language_field).value] = document.getElementById(description_field).value;
+					console.log(myObj);
+					
+				}
+				
+				for(l = 0; l < numberMaintainers; l++){
+					var maintainerName_field = 'maintainer_name' + l;
+					var maintainerLanguage = 'languageMaintainer' + l;
+					var maintainerEmail = 'maintainer_email' + l;
+					var maintainerURL = 'maintainer_url' + l;
+					var maintainerName = document.getElementById(maintainerName_field).value;
+					var maintainerLanguage = document.getElementById(maintainerLanguage).value;
+					var maintainerEmail = document.getElementById(maintainerEmail).value;
+					var maintainerURL = document.getElementById(maintainerURL).value;
+				}
+				
+				console.log(repositoryType.value);
+				console.log(repositoryURL.value);
+				console.log(values);
+				console.log(type.value);
+				console.log(version.value);
+				console.log(apiVersion.value);
             }
         </script>
+	
 
         <input type="submit" onclick="printValues()">
     </body> 
