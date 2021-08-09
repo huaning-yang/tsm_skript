@@ -114,8 +114,7 @@
                 for(i = 0; i < number; i++) {
                     container.appendChild(document.createTextNode(type + (i+1)));
                     var name = document.createElement('form');
-                    var email = document.createElement('input');
-                    var url = document.createElement('input');
+                    
                     var input = document.createElement('input');
                     input.type = 'text';
                     input.id = 'maintainer_name' + i;
@@ -246,54 +245,50 @@
         </div>
         <script>
             function printValues(){
-                var version = document.getElementById('version');
-				var apiVersion = document.getElementById('apiVersion');
+                var myObj = {};
 				var repositoryType = document.getElementById('repoSelect');
-				var type = document.getElementById('context');
 				var notSupporedFeatures = document.getElementById('notSupportedFeaturesSelect').selectedOptions;
 				var values = Array.from(notSupporedFeatures).map(({value}) => value);
 				var numberNames = document.getElementById('name_field').value;
 				var numberDescriptions = document.getElementById('description_field').value;
 				var numberMaintainers = document.getElementById('maintainer_field').value;
 				var repositoryURL = document.getElementById('repoURL');
+                myObj['name'] = {};
 				for(i= 0; i < numberNames; i++) {
 					var name_field = 'Name_field' + i;
 					var language_field = 'languageName' + i;
-					var name = document.getElementById(name_field);
-					var language = document.getElementById(language_field);
-					console.log(name.value);
-					console.log(language.value);
-				}
-				var myObj = {};
+                    myObj['name'][document.getElementById(language_field).value] = document.getElementById(name_field).value;
+                }
+                myObj['description'] = {};
 				for(j= 0; j < numberDescriptions; j++) {
 					var description_field = 'Description_field' + j;
 					var language_field = 'languageDescription' + j;
-					console.log
-					var description = document.getElementById(description_field);
-					var language = document.getElementById(language_field);
-					myObj[description_field] = {};
-					myObj[description_field][document.getElementById(language_field).value] = document.getElementById(description_field).value;
-					console.log(myObj);
-					
+					myObj['description'][document.getElementById(language_field).value] = document.getElementById(description_field).value;
 				}
 				
+                myObj['@type'] = document.getElementById('context').value;
+                myObj['version'] = document.getElementById('version').value;
+                myObj['apiVersion'] = document.getElementById('apiVersion').value;
+
+                myObj['maintainer'] = {};
+                myObj['maintainer']['name'] = {};
 				for(l = 0; l < numberMaintainers; l++){
 					var maintainerName_field = 'maintainer_name' + l;
 					var maintainerLanguage = 'languageMaintainer' + l;
 					var maintainerEmail = 'maintainer_email' + l;
 					var maintainerURL = 'maintainer_url' + l;
-					var maintainerName = document.getElementById(maintainerName_field).value;
-					var maintainerLanguage = document.getElementById(maintainerLanguage).value;
-					var maintainerEmail = document.getElementById(maintainerEmail).value;
-					var maintainerURL = document.getElementById(maintainerURL).value;
+                    myObj['maintainer']['@type'] = 'maintainer';
+                    myObj['maintainer']['name'][document.getElementById(maintainerLanguage).value] = document.getElementById(maintainerName_field).value;
+                    myObj['maintainer']['email'] = document.getElementById(maintainerEmail).value;
+                    myObj['maintainer']['url'] = document.getElementById(maintainerURL).value;
 				}
 				
-				console.log(repositoryType.value);
-				console.log(repositoryURL.value);
-				console.log(values);
-				console.log(type.value);
-				console.log(version.value);
-				console.log(apiVersion.value);
+                myObj['repository'] = {};
+                myObj['repository']['@type'] = 'repository';
+                myObj['repository']['repoType'] = document.getElementById('repoSelect').value;
+                myObj['repository']['url'] = document.getElementById('repoURL').value;
+
+                console.log(myObj);
             }
         </script>
 	
