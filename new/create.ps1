@@ -13,6 +13,6 @@ $Input = "Dateien hashen", "Dateien nicht hashen" | Out-GridView -PassThru -Titl
 $creation_date = get-date -f dd-MM-yyyy_hh-mm-ss
 "$Name
 $Path
-$Input" | Set-Content "C:\Users\Ninghorn\Desktop\Testordner\offene Aufträge\auftrag_$creation_date.txt"
-Write-Host "Der Auftrag wurde erstellt. Die gesammelten Informationen befinden sich in CC:\Users\Ninghorn\Desktop\Testordner\offene Aufträge\auftrag_$creation_date.txt"
+$Input" | Set-Content "C:\Users\yanghuan\Desktop\Testordner\offene Aufträge\auftrag_$creation_date.txt"
+Write-Host "Der Auftrag wurde erstellt. Die gesammelten Informationen befinden sich inC:\Users\yanghuan\Desktop\Testordner\offene Aufträge\auftrag_$creation_date.txt"
 Read-Host -Prompt "Drücken Sie Enter um dieses Fenster zu schließen"

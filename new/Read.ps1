@@ -1,7 +1,7 @@
 ﻿$env:SEE_MASK_NOZONECHECKS = 1
 
-if ( Test-Path "C:\Users\Ninghorn\Desktop\Testordner\offene Aufträge\auftrag_*.txt") {
-    $items = Get-ChildItem "C:\Users\Ninghorn\Desktop\Testordner\offene Aufträge" -Filter auftrag_*.txt
+if ( Test-Path "C:\Users\yanghuan\Desktop\Testordner\offene Aufträge\auftrag_*.txt") {
+    $items = Get-ChildItem "C:\Users\yanghuan\Desktop\Testordner\offene Aufträge" -Filter auftrag_*.txt
     foreach ($item in $items){
         $filenameParts = $item.BaseName -split "_"
         $part2 = $filenameParts[1]
@@ -15,27 +15,28 @@ if ( Test-Path "C:\Users\Ninghorn\Desktop\Testordner\offene Aufträge\auftrag_*.
 
                 Write-Host " Auftraggebende Person: $name `n Zu archivierender Ordner: $path `n $hash `n Auftragsdatei: $filename `n $part2 `n $part3"
                 Set-Location $path
-                $folderPath = $path + "\*.*"
+                $FolderPath = $path + "\*"
                 $timestamp = $(get-date -f dd-MM-yyyy_hh-mm-ss)
-                $hashPath = "C:\Users\Ninghorn\Desktop\Testordner\Aufträge Hashes"
+                $hashPath = "C:\Users\yanghuan\Desktop\Testordner\Auftrag Hashes"
                 $hashFilename = "\auftrag_" + $part2 + "_" + $part3 + "_"+ "hashes_$timestamp.csv"
                 $hashFile = $hashPath + $hashFilename
             
                 if( Test-Path -Path $FolderPath){
+                    Write-Host "IM IF"
                     if($hash -eq "Dateien hashen"){
                         Get-FileHash -Path (Get-ChildItem $FolderPath -Recurse -force) | export-csv $hashFile -NoTypeInformation
                     }
                 }
 
-                Robocopy $path C:\Users\Ninghorn\Desktop\Archivordner /MIR /FFT /Z /XA:H /W:5 
-                Copy-Item $hashFile -Destination C:\Users\Ninghorn\Desktop\Archivordner
+                Robocopy $path "C:\Users\yanghuan\Desktop\Archiv Ordner" /MIR /FFT /Z /XA:H /W:5 
+                Copy-Item $hashFile -Destination "C:\Users\yanghuan\Desktop\Archiv Ordner"
 
     
                 #Start-Process -FilePath J:\TSM\file_log.bat 
                 #Start-Process -FilePath J:\TSM\tsm_archiv.bat -Wait
 
                 #Get-ChildItem -Path 'C:\Users\Ninghorn\Desktop\Archivordner' -Recurse| Foreach-object {Remove-item -Recurse -path $_.FullName }
-                Move-Item $item.fullName -Destination "C:\Users\Ninghorn\Desktop\Testordner\erledigte Aufträge\"
+                Move-Item $item.fullName -Destination "C:\Users\yanghuan\Desktop\Testordner\erledigte Aufträge\"
           }
        }
     }
